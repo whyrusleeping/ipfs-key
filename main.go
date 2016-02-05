@@ -24,13 +24,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Fprintf(os.Stderr, "Generating a %d bit %s key...", *size, *typ)
+	fmt.Fprintf(os.Stderr, "Generating a %d bit %s key...\n", *size, *typ)
 	priv, pub, err := ci.GenerateKeyPair(atyp, *size)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	fmt.Fprintf(os.Stderr, "Success!")
+	fmt.Fprintln(os.Stderr, "Success!")
 
 	pid, err := peer.IDFromPublicKey(pub)
 	if err != nil {
