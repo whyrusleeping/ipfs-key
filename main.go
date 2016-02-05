@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	ci "github.com/ipfs/go-ipfs/p2p/crypto"
-	peer "github.com/ipfs/go-ipfs/p2p/peer"
+	ci "github.com/ipfs/go-libp2p/p2p/crypto"
+	peer "github.com/ipfs/go-libp2p/p2p/peer"
 )
 
 func main() {
@@ -24,11 +24,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	fmt.Fprintf(os.Stderr, "Generating a %d bit %s key...", *size, *typ)
 	priv, pub, err := ci.GenerateKeyPair(atyp, *size)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+	fmt.Fprintf(os.Stderr, "Success!")
 
 	pid, err := peer.IDFromPublicKey(pub)
 	if err != nil {
