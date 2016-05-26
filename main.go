@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	ci "github.com/ipfs/go-libp2p/p2p/crypto"
-	peer "github.com/ipfs/go-libp2p/p2p/peer"
+	ci "github.com/ipfs/go-libp2p-crypto"
+	peer "github.com/ipfs/go-libp2p-peer"
 )
 
 func main() {
