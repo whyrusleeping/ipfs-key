@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	ci "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
-	"strings"
 )
 
 func main() {
