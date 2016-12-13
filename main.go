@@ -11,7 +11,7 @@ import (
 
 func main() {
 	size := flag.Int("bitsize", 2048, "select the bitsize of the key to generate")
-	typ := flag.String("type", "RSA", "select type of key to generate")
+	typ := flag.String("type", "RSA", "select type of key to generate (RSA or Ed25519)")
 
 	flag.Parse()
 
@@ -19,6 +19,8 @@ func main() {
 	switch *typ {
 	case "RSA":
 		atyp = ci.RSA
+	case "Ed25519":
+		atyp = ci.Ed25519
 	default:
 		fmt.Fprintln(os.Stderr, "unrecognized key type: ", *typ)
 		os.Exit(1)
