@@ -7,6 +7,7 @@ import (
 
 	ci "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
+	"strings"
 )
 
 func main() {
@@ -16,10 +17,10 @@ func main() {
 	flag.Parse()
 
 	var atyp int
-	switch *typ {
-	case "RSA":
+	switch strings.ToLower(*typ) {
+	case "rsa":
 		atyp = ci.RSA
-	case "Ed25519":
+	case "ed25519":
 		atyp = ci.Ed25519
 	default:
 		fmt.Fprintln(os.Stderr, "unrecognized key type: ", *typ)
