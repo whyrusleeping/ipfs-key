@@ -23,7 +23,7 @@ When run, it will write the bytes of
 the serialized private key to stdout. By default, a 2048 bit RSA key will be
 generated. In this case the key size can be changed by specifying the `-bitsize`
 option. The key type can be changed by specifying the `-type` option (rsa or
-ed25519). Currently only the RSA uses the -bitsize option.
+ed25519).
 
 ```
 $ ipfs-key -bitsize=4096 > my-rsa4096.key
