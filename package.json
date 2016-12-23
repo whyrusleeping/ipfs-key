@@ -1,0 +1,28 @@
+{
+  "author": "whyrusleeping",
+  "bugs": {
+    "url": "https://github.com/whyrusleeping/ipfs-key/issues"
+  },
+  "gx": {
+    "dvcsimport": "github.com/whyrusleeping/ipfs-key"
+  },
+  "gxDependencies": [
+    {
+      "hash": "QmfWDLQjGjVe4fr5CoztYW2DYYjRysMJrFe1RCsXLPTf46",
+      "name": "go-libp2p-crypto",
+      "version": "1.3.1"
+    },
+    {
+      "hash": "QmfMmLGoKzCHDN7cGgk64PJr4iipzidDRME8HABSJqvmhC",
+      "name": "go-libp2p-peer",
+      "version": "2.1.0"
+    }
+  ],
+  "gxVersion": "0.10.0",
+  "language": "go",
+  "license": "MIT",
+  "name": "ipfs-key",
+  "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
+  "version": "0.1.0"
+}
+

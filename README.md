@@ -13,8 +13,11 @@
 
 ## Installation
 
+You need go, gx and gx-go installed as a prerequisite. See http://github.com/ipfs/go-ipfs/ on how to install these.
+
 ```
-$ go get github.com/whyrusleeping/ipfs-key
+$ go get -d github.com/whyrusleeping/ipfs-key
+$ gx install
 ```
 
 ## Usage
