@@ -30,6 +30,20 @@ $ ipfs-key -bitsize=4096 > my-rsa4096.key
 $ ipfs-key -type=ed25519 > my-ed.key
 ```
 
+# Docker Usage
+
+### Local
+
+```
+$ docker build --tag="ipfs-key" .
+$ docker run ipfs-key
+```
+### Docker Hub
+
+```
+$ docker run belaytzev/ipfs-key
+```
+
 ## Contribute
 
 PRs accepted.
