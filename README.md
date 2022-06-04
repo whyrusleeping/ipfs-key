@@ -2,7 +2,7 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-> A tool for easily generating ipfs keypairs
+> A tool for easily generating and reading ipfs keypairs
 
 ## Table of Contents
 
@@ -27,7 +27,21 @@ ed25519).
 
 ```
 $ ipfs-key -bitsize=4096 > my-rsa4096.key
+Generating a 4096 bit RSA key...
+Success!
+ID for generated key: QmS5cwbxmGyPiEH3SYNgiAazG46NvogKxfx2iX6jt4ef1a
+```
+```
 $ ipfs-key -type=ed25519 > my-ed.key
+Generating a 2048 bit ed25519 key...
+Success!
+ID for generated key: 12D3KooWHM4kLNwS2FzN5GtG5Dfy9h7dLTRs3rtuF9NiR4mjBv3h
+```
+```
+$ ipfs-key -key my-ed.key
+Reading key at: my-ed.key
+Success!
+ID for key: 12D3KooWF1TKgiqLMh14za7dWMN5RFRC1WAvgHYioksmdwuhZkzT
 ```
 
 ## Contribute

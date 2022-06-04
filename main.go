@@ -3,51 +3,89 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 
-	ci "github.com/libp2p/go-libp2p-crypto"
-	peer "github.com/libp2p/go-libp2p-peer"
+	crp "github.com/libp2p/go-libp2p-core/crypto"
+	peer "github.com/libp2p/go-libp2p-core/peer"
 )
 
 func main() {
 	size := flag.Int("bitsize", 2048, "select the bitsize of the key to generate")
 	typ := flag.String("type", "RSA", "select type of key to generate (RSA or Ed25519)")
+	key := flag.String("key", "", "specify the location of the key to decode it's peerID")
 
 	flag.Parse()
 
+	if *key != "" {
+		if err := readKey(key); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+		return
+	}
+
+	if err := genKey(typ, size); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+	return
+}
+
+func readKey(keyLoc *string) error {
+	data, err := ioutil.ReadFile(*keyLoc)
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Reading key at: %s\n", *keyLoc)
+
+	prvk, err := crp.UnmarshalPrivateKey(data)
+	if err != nil {
+		return err
+	}
+
+	id, err := peer.IDFromPrivateKey(prvk)
+	if err != nil {
+		return err
+	}
+
+	_, err = fmt.Fprintf(os.Stderr, "Success!\nID for key: %s\n", id.Pretty())
+	return err
+}
+
+func genKey(typ *string, size *int) error {
 	var atyp int
 	switch strings.ToLower(*typ) {
 	case "rsa":
-		atyp = ci.RSA
+		atyp = crp.RSA
 	case "ed25519":
-		atyp = ci.Ed25519
+		atyp = crp.Ed25519
 	default:
-		fmt.Fprintln(os.Stderr, "unrecognized key type: ", *typ)
-		os.Exit(1)
+		return fmt.Errorf("unrecognized key type: %s", *typ)
 	}
 
 	fmt.Fprintf(os.Stderr, "Generating a %d bit %s key...\n", *size, *typ)
-	priv, pub, err := ci.GenerateKeyPair(atyp, *size)
+
+	priv, pub, err := crp.GenerateKeyPair(atyp, *size)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
-	fmt.Fprintln(os.Stderr, "Success!")
 
 	pid, err := peer.IDFromPublicKey(pub)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "ID for generated key: %s\n", pid.Pretty())
-
-	data, err := priv.Bytes()
+	data, err := crp.MarshalPrivateKey(priv)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 
-	os.Stdout.Write(data)
+	_, err = os.Stdout.Write(data)
+	if err != nil {
+		return nil
+	}
+
+	_, err = fmt.Fprintf(os.Stderr, "Success!\nID for generated key: %s\n", pid.Pretty())
+	return err
 }
