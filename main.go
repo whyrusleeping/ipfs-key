@@ -13,25 +13,28 @@ import (
 
 func main() {
 	size := flag.Int("bitsize", 2048, "select the bitsize of the key to generate")
-	typ := flag.String("type", "RSA", "select type of key to generate (RSA or Ed25519)")
+	typ := flag.String("type", "", "select type of key to generate (RSA, Ed25519, Secp256k1 or ECDSA)")
 	key := flag.String("key", "", "specify the location of the key to decode it's peerID")
 
 	flag.Parse()
 
 	if *key != "" {
-		if err := readKey(key); err != nil {
+		if err := readKey(key, typ); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
 		return
 	}
 
+	if *typ == "" {
+		*typ = "RSA"
+	}
 	if err := genKey(typ, size); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
 	return
 }
 
-func readKey(keyLoc *string) error {
+func readKey(keyLoc *string, typ *string) error {
 	data, err := ioutil.ReadFile(*keyLoc)
 	if err != nil {
 		return err
@@ -39,7 +42,19 @@ func readKey(keyLoc *string) error {
 
 	fmt.Fprintf(os.Stderr, "Reading key at: %s\n", *keyLoc)
 
-	prvk, err := crp.UnmarshalPrivateKey(data)
+	var unmarshalPrivateKeyFucn func(data []byte) (crp.PrivKey, error)
+	// rsa and ed25519 unmarshalPrivateKeyFucn are for backward compatibility
+	// for keys saved with raw(), to read such keys, specify the key type
+	switch strings.ToLower(*typ) {
+	case "rsa":
+		unmarshalPrivateKeyFucn = crp.UnmarshalRsaPrivateKey
+	case "ed25519":
+		unmarshalPrivateKeyFucn = crp.UnmarshalEd25519PrivateKey
+	default:
+		unmarshalPrivateKeyFucn = crp.UnmarshalPrivateKey
+	}
+
+	prvk, err := unmarshalPrivateKeyFucn(data)
 	if err != nil {
 		return err
 	}
@@ -49,7 +64,7 @@ func readKey(keyLoc *string) error {
 		return err
 	}
 
-	_, err = fmt.Fprintf(os.Stderr, "Success!\nID for key: %s\n", id.Pretty())
+	_, err = fmt.Fprintf(os.Stderr, "Success!\nID for %s key: %s\n", prvk.Type().String(), id.Pretty())
 	return err
 }
 
@@ -60,6 +75,10 @@ func genKey(typ *string, size *int) error {
 		atyp = crp.RSA
 	case "ed25519":
 		atyp = crp.Ed25519
+	case "secp256k1":
+		atyp = crp.Secp256k1
+	case "ecdsa":
+		atyp = crp.ECDSA
 	default:
 		return fmt.Errorf("unrecognized key type: %s", *typ)
 	}
