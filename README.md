@@ -50,6 +50,20 @@ Success!
 ID for rsa key: 12D3KooWF1TKgiqLMh14za7dWMN5RFRC1WAvgHYioksmdwuhZkzT
 ```
 
+# Docker Usage
+
+### Local
+
+```
+$ docker build --tag="ipfs-key" .
+$ docker run ipfs-key
+```
+### Docker Hub
+
+```
+$ docker run belaytzev/ipfs-key
+```
+
 ## Contribute
 
 PRs accepted.
